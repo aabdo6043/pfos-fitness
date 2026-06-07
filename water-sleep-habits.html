@@ -1,0 +1,597 @@
+<!-- Water Tracking Module -->
+<div class="module-content" id="water-module">
+  <div class="module-header">
+    <h2 data-i18n="nav_water">Water Intake</h2>
+    <button class="btn btn-primary" id="recordWaterBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Today's Water -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="today_water">Today's Water Intake</h3>
+      </div>
+      <div class="card-body">
+        <div class="water-progress">
+          <div class="water-circle">
+            <svg viewBox="0 0 100 100" class="water-svg">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="var(--border-color)" stroke-width="2"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="var(--color-info)" stroke-width="2" 
+                      stroke-dasharray="141.3 282.6" transform="rotate(-90 50 50)"/>
+            </svg>
+            <div class="water-text">
+              <span class="water-value" id="todayWater">0</span>
+              <span class="water-unit">L</span>
+            </div>
+          </div>
+          <div class="water-info">
+            <div class="info-item">
+              <span class="label" data-i18n="target_water">Target</span>
+              <span class="value" id="waterTarget">2.5</span>
+              <span class="unit">L</span>
+            </div>
+            <div class="info-item">
+              <span class="label" data-i18n="remaining">Remaining</span>
+              <span class="value" id="waterRemaining">2.5</span>
+              <span class="unit">L</span>
+            </div>
+            <div class="info-item">
+              <span class="label" data-i18n="percentage">Percentage</span>
+              <span class="value" id="waterPercentage">0</span>
+              <span class="unit">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Water Add -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="quick_add">Quick Add</h3>
+      </div>
+      <div class="card-body">
+        <div class="quick-water-buttons">
+          <button class="water-btn" onclick="WaterModule.quickAdd(0.25)">250ml</button>
+          <button class="water-btn" onclick="WaterModule.quickAdd(0.5)">500ml</button>
+          <button class="water-btn" onclick="WaterModule.quickAdd(0.75)">750ml</button>
+          <button class="water-btn" onclick="WaterModule.quickAdd(1)">1L</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Water History -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="water_history">Water History</h3>
+      </div>
+      <div class="card-body">
+        <div class="water-list" id="waterList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Sleep Tracking Module -->
+<div class="module-content" id="sleep-module" style="display: none;">
+  <div class="module-header">
+    <h2 data-i18n="nav_sleep">Sleep</h2>
+    <button class="btn btn-primary" id="recordSleepBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Sleep Stats -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="sleep_stats">Sleep Statistics</h3>
+      </div>
+      <div class="card-body">
+        <div class="sleep-stats">
+          <div class="stat-box">
+            <span class="label" data-i18n="last_night">Last Night</span>
+            <span class="value" id="lastNightSleep">0</span>
+            <span class="unit">hours</span>
+          </div>
+          <div class="stat-box">
+            <span class="label" data-i18n="average_sleep">Average Sleep</span>
+            <span class="value" id="averageSleep">0</span>
+            <span class="unit">hours</span>
+          </div>
+          <div class="stat-box">
+            <span class="label" data-i18n="sleep_quality">Sleep Quality</span>
+            <span class="value" id="sleepQuality">0</span>
+            <span class="unit">/10</span>
+          </div>
+          <div class="stat-box">
+            <span class="label" data-i18n="target_sleep">Target Sleep</span>
+            <span class="value" id="targetSleep">8</span>
+            <span class="unit">hours</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sleep Chart -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="sleep_trend">Sleep Trend</h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="sleepChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sleep History -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="sleep_history">Sleep History</h3>
+      </div>
+      <div class="card-body">
+        <div class="sleep-list" id="sleepList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Habits Tracking Module -->
+<div class="module-content" id="habits-module" style="display: none;">
+  <div class="module-header">
+    <h2 data-i18n="nav_habits">Habits</h2>
+    <button class="btn btn-primary" id="createHabitBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Active Habits -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="active_habits">Active Habits</h3>
+      </section>
+      <div class="card-body">
+        <div class="habits-list" id="habitsList">
+          <p class="empty-state" data-i18n="no_records">No habits yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Habit Statistics -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="habit_stats">Habit Statistics</h3>
+      </div>
+      <div class="card-body">
+        <div class="stats-list">
+          <div class="stat-item">
+            <span class="label" data-i18n="total_habits">Total Habits</span>
+            <span class="value" id="totalHabits">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="completed_today">Completed Today</span>
+            <span class="value" id="completedToday">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="completion_rate">Completion Rate</span>
+            <span class="value" id="completionRate">0</span>
+            <span class="unit">%</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="longest_streak">Longest Streak</span>
+            <span class="value" id="longestStreak">0</span>
+            <span class="unit" data-i18n="days">days</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Habit Calendar -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="habit_calendar">Habit Calendar</h3>
+        <div class="calendar-controls">
+          <select id="habitSelect" class="form-control">
+            <option value="">Select Habit</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="calendar" id="habitCalendar"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .water-progress {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+  }
+
+  .water-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .water-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .water-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .water-value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-info);
+  }
+
+  .water-unit {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .water-info {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .info-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .info-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-info);
+  }
+
+  .quick-water-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .water-btn {
+    padding: var(--spacing-lg);
+    background-color: var(--color-info);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .water-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .water-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .water-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-info);
+    border-radius: var(--radius-md);
+  }
+
+  .sleep-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .stat-box .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-box .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .habits-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .habit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .habit-info {
+    flex: 1;
+  }
+
+  .habit-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .habit-streak {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .habit-checkbox {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-primary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .habit-checkbox.completed {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+  }
+
+  .stats-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .stat-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 768px) {
+    .water-progress {
+      flex-direction: column;
+    }
+
+    .water-info {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-water-buttons {
+      grid-template-columns: 1fr;
+    }
+
+    .sleep-stats,
+    .stats-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const WaterModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadWaterData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('recordWaterBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+    },
+    
+    loadWaterData: function() {
+      document.getElementById('todayWater').textContent = '1.5';
+      document.getElementById('waterTarget').textContent = '2.5';
+      document.getElementById('waterRemaining').textContent = '1.0';
+      document.getElementById('waterPercentage').textContent = '60';
+      
+      this.loadWaterHistory();
+    },
+    
+    loadWaterHistory: function() {
+      const records = [
+        { time: '08:00', amount: 0.5 },
+        { time: '12:00', amount: 0.5 },
+        { time: '16:00', amount: 0.5 }
+      ];
+      
+      const list = document.getElementById('waterList');
+      list.innerHTML = '';
+      
+      records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'water-item';
+        item.innerHTML = `
+          <div>${record.time}</div>
+          <div>${record.amount} L</div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    quickAdd: function(amount) {
+      console.log('Adding water:', amount, 'L');
+      Utils.showNotification(amount + 'L added', 'success');
+      this.loadWaterData();
+    },
+    
+    showModal: function() {
+      Utils.showNotification('Water recording modal', 'info');
+    }
+  };
+
+  const SleepModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadSleepData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('recordSleepBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+    },
+    
+    loadSleepData: function() {
+      document.getElementById('lastNightSleep').textContent = '7.5';
+      document.getElementById('averageSleep').textContent = '7.2';
+      document.getElementById('sleepQuality').textContent = '8';
+      document.getElementById('targetSleep').textContent = '8';
+      
+      this.loadSleepHistory();
+    },
+    
+    loadSleepHistory: function() {
+      const records = [
+        { date: '2024-01-15', duration: 7.5, quality: 8 },
+        { date: '2024-01-14', duration: 7, quality: 7 },
+        { date: '2024-01-13', duration: 8, quality: 9 }
+      ];
+      
+      const list = document.getElementById('sleepList');
+      list.innerHTML = '';
+      
+      records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'water-item';
+        item.innerHTML = `
+          <div>
+            <div>${Utils.formatDateReadable(record.date)}</div>
+            <div style="font-size: 0.9rem; color: var(--text-secondary);">Quality: ${record.quality}/10</div>
+          </div>
+          <div>${record.duration} hours</div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      Utils.showNotification('Sleep recording modal', 'info');
+    }
+  };
+
+  const HabitsModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadHabitsData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('createHabitBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+    },
+    
+    loadHabitsData: function() {
+      document.getElementById('totalHabits').textContent = '5';
+      document.getElementById('completedToday').textContent = '3';
+      document.getElementById('completionRate').textContent = '60';
+      document.getElementById('longestStreak').textContent = '12';
+      
+      this.loadHabits();
+    },
+    
+    loadHabits: function() {
+      const habits = [
+        { name: 'Morning Meditation', streak: 12, completed: true },
+        { name: 'Read for 30 mins', streak: 8, completed: false },
+        { name: 'Drink 2.5L Water', streak: 15, completed: true },
+        { name: 'Evening Walk', streak: 5, completed: true },
+        { name: 'No Junk Food', streak: 3, completed: false }
+      ];
+      
+      const list = document.getElementById('habitsList');
+      list.innerHTML = '';
+      
+      habits.forEach(habit => {
+        const item = document.createElement('div');
+        item.className = 'habit-item';
+        item.innerHTML = `
+          <div class="habit-info">
+            <div class="habit-name">${habit.name}</div>
+            <div class="habit-streak">🔥 ${habit.streak} day streak</div>
+          </div>
+          <div class="habit-checkbox ${habit.completed ? 'completed' : ''}"></div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      Utils.showNotification('Habit creation modal', 'info');
+    }
+  };
+</script>

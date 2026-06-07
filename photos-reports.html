@@ -1,0 +1,656 @@
+<!-- Progress Photos Module -->
+<div class="module-content" id="photos-module">
+  <div class="module-header">
+    <h2 data-i18n="nav_photos">Progress Photos</h2>
+    <button class="btn btn-primary" id="uploadPhotoBtn">
+      <span>📸</span>
+      <span data-i18n="btn_upload">Upload</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Photo Views -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="photo_views">Photo Views</h3>
+        <div class="view-controls">
+          <button class="view-btn active" data-view="all">All</button>
+          <button class="view-btn" data-view="front">Front</button>
+          <button class="view-btn" data-view="side">Side</button>
+          <button class="view-btn" data-view="back">Back</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="photos-grid" id="photosGrid">
+          <p class="empty-state" data-i18n="no_records">No photos yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Comparison -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="before_after">Before/After Comparison</h3>
+      </div>
+      <div class="card-body">
+        <div class="comparison-container" id="comparisonContainer">
+          <p class="empty-state" data-i18n="no_records">Not enough photos for comparison</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photo Statistics -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="photo_stats">Photo Statistics</h3>
+      </div>
+      <div class="card-body">
+        <div class="stats-list">
+          <div class="stat-item">
+            <span class="label" data-i18n="total_photos">Total Photos</span>
+            <span class="value" id="totalPhotos">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="front_photos">Front View</span>
+            <span class="value" id="frontPhotos">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="side_photos">Side View</span>
+            <span class="value" id="sidePhotos">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="back_photos">Back View</span>
+            <span class="value" id="backPhotos">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photo Timeline -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="photo_timeline">Photo Timeline</h3>
+      </div>
+      <div class="card-body">
+        <div class="timeline" id="photoTimeline">
+          <p class="empty-state" data-i18n="no_records">No photos yet</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Reports Module -->
+<div class="module-content" id="reports-module" style="display: none;">
+  <div class="module-header">
+    <h2 data-i18n="nav_reports">Reports</h2>
+    <button class="btn btn-primary" id="generateReportBtn">
+      <span>📊</span>
+      <span data-i18n="btn_generate">Generate</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Report Period Selection -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="select_period">Select Period</h3>
+      </div>
+      <div class="card-body">
+        <div class="period-buttons">
+          <button class="period-btn active" data-period="daily">Daily</button>
+          <button class="period-btn" data-period="weekly">Weekly</button>
+          <button class="period-btn" data-period="monthly">Monthly</button>
+          <button class="period-btn" data-period="yearly">Yearly</button>
+        </div>
+        <div class="date-picker" style="margin-top: var(--spacing-lg);">
+          <input type="date" id="reportDate" class="form-control">
+        </div>
+      </div>
+    </section>
+
+    <!-- Report Summary -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="report_summary">Report Summary</h3>
+      </div>
+      <div class="card-body">
+        <div class="report-summary" id="reportSummary">
+          <p class="empty-state" data-i18n="no_data">No data available</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Attendance Report -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="attendance_report">Attendance Report</h3>
+      </div>
+      <div class="card-body">
+        <div class="report-stats">
+          <div class="report-stat">
+            <span class="label" data-i18n="days_present">Days Present</span>
+            <span class="value" id="daysPresent">0</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="days_absent">Days Absent</span>
+            <span class="value" id="daysAbsent">0</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="attendance_rate">Rate</span>
+            <span class="value" id="attendanceReportRate">0</span>
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workout Report -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="workout_report">Workout Report</h3>
+      </div>
+      <div class="card-body">
+        <div class="report-stats">
+          <div class="report-stat">
+            <span class="label" data-i18n="total_workouts">Total Workouts</span>
+            <span class="value" id="totalWorkouts">0</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="total_exercises">Exercises</span>
+            <span class="value" id="totalExercisesReport">0</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="avg_duration">Avg Duration</span>
+            <span class="value" id="avgDurationReport">0</span>
+            <span class="unit">min</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nutrition Report -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="nutrition_report">Nutrition Report</h3>
+      </div>
+      <div class="card-body">
+        <div class="report-stats">
+          <div class="report-stat">
+            <span class="label" data-i18n="avg_calories">Avg Calories</span>
+            <span class="value" id="avgCalories">0</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="avg_protein">Avg Protein</span>
+            <span class="value" id="avgProteinReport">0</span>
+            <span class="unit">g</span>
+          </div>
+          <div class="report-stat">
+            <span class="label" data-i18n="days_tracked">Days Tracked</span>
+            <span class="value" id="daysTrackedReport">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Report Chart -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="detailed_analysis">Detailed Analysis</h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="reportChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Export Options -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="export_report">Export Report</h3>
+      </div>
+      <div class="card-body">
+        <div class="export-buttons">
+          <button class="btn btn-primary" id="exportPDF">
+            <span>📄</span>
+            <span>Export as PDF</span>
+          </button>
+          <button class="btn btn-secondary" id="exportCSV">
+            <span>📊</span>
+            <span>Export as CSV</span>
+          </button>
+          <button class="btn btn-secondary" id="emailReport">
+            <span>📧</span>
+            <span>Email Report</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Upload Photo Modal -->
+<div class="modal" id="photoModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="upload_photo">Upload Progress Photo</h2>
+      <button class="btn-close" id="closePhotoModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="photoForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="photoDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_view">View</label>
+          <select id="photoView" class="form-control" required>
+            <option value="">Select View</option>
+            <option value="Front">Front</option>
+            <option value="Side">Side</option>
+            <option value="Back">Back</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_image">Upload Image</label>
+          <div class="file-upload">
+            <input type="file" id="photoFile" class="file-input" accept="image/*" required>
+            <div class="file-upload-area">
+              <span class="upload-icon">📸</span>
+              <span class="upload-text" data-i18n="click_to_upload">Click to upload or drag and drop</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="photoNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelPhoto">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .view-controls {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .view-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-weight: 600;
+  }
+
+  .view-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .photo-item {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .photo-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--spacing-lg);
+    color: white;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .photo-item:hover .photo-overlay {
+    opacity: 1;
+  }
+
+  .photo-date {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .photo-view {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .comparison-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+  }
+
+  .comparison-image {
+    text-align: center;
+  }
+
+  .comparison-label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .comparison-img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+  }
+
+  .stats-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .stat-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .timeline-date {
+    font-weight: 600;
+    min-width: 80px;
+  }
+
+  .period-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .period-btn {
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-weight: 600;
+  }
+
+  .period-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .report-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .report-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .report-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .report-stat .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .report-stat .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .export-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  @media (max-width: 768px) {
+    .photos-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .comparison-container {
+      grid-template-columns: 1fr;
+    }
+
+    .period-buttons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .report-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const PhotosModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadPhotosData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('uploadPhotoBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closePhotoModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelPhoto').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('photoForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.savePhoto();
+      });
+      
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    },
+    
+    loadPhotosData: function() {
+      document.getElementById('totalPhotos').textContent = '12';
+      document.getElementById('frontPhotos').textContent = '4';
+      document.getElementById('sidePhotos').textContent = '4';
+      document.getElementById('backPhotos').textContent = '4';
+      
+      this.loadPhotos();
+    },
+    
+    loadPhotos: function() {
+      const photos = [
+        { date: '2024-01-15', view: 'Front' },
+        { date: '2024-01-15', view: 'Side' },
+        { date: '2024-01-15', view: 'Back' },
+        { date: '2024-01-08', view: 'Front' },
+        { date: '2024-01-08', view: 'Side' },
+        { date: '2024-01-08', view: 'Back' }
+      ];
+      
+      const grid = document.getElementById('photosGrid');
+      grid.innerHTML = '';
+      
+      photos.forEach(photo => {
+        const item = document.createElement('div');
+        item.className = 'photo-item';
+        item.innerHTML = `
+          <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--color-primary), var(--color-success)); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+            📸
+          </div>
+          <div class="photo-overlay">
+            <div class="photo-date">${Utils.formatDateReadable(photo.date)}</div>
+            <div class="photo-view">${photo.view} View</div>
+          </div>
+        `;
+        grid.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('photoDate').valueAsDate = new Date();
+      document.getElementById('photoModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('photoModal').style.display = 'none';
+      document.getElementById('photoForm').reset();
+    },
+    
+    savePhoto: function() {
+      const date = document.getElementById('photoDate').value;
+      const view = document.getElementById('photoView').value;
+      
+      console.log('Saving photo:', { date, view });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadPhotosData();
+    }
+  };
+
+  const ReportsModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadReportData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('generateReportBtn').addEventListener('click', () => {
+        this.generateReport();
+      });
+      
+      document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+      
+      document.getElementById('exportPDF').addEventListener('click', () => {
+        Utils.showNotification('Exporting as PDF...', 'info');
+      });
+      
+      document.getElementById('exportCSV').addEventListener('click', () => {
+        Utils.showNotification('Exporting as CSV...', 'info');
+      });
+      
+      document.getElementById('emailReport').addEventListener('click', () => {
+        Utils.showNotification('Sending email...', 'info');
+      });
+    },
+    
+    loadReportData: function() {
+      document.getElementById('daysPresent').textContent = '20';
+      document.getElementById('daysAbsent').textContent = '2';
+      document.getElementById('attendanceReportRate').textContent = '91';
+      
+      document.getElementById('totalWorkouts').textContent = '12';
+      document.getElementById('totalExercisesReport').textContent = '60';
+      document.getElementById('avgDurationReport').textContent = '65';
+      
+      document.getElementById('avgCalories').textContent = '2100';
+      document.getElementById('avgProteinReport').textContent = '150';
+      document.getElementById('daysTrackedReport').textContent = '22';
+    },
+    
+    generateReport: function() {
+      Utils.showNotification('Report generated successfully', 'success');
+      this.loadReportData();
+    }
+  };
+</script>

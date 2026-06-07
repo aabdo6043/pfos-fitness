@@ -1,0 +1,432 @@
+<!-- Nutrition Tracking Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_nutrition">Nutrition</h2>
+    <button class="btn btn-primary" id="recordNutritionBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Today's Macros -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="today_macros">Today's Macros</h3>
+      </div>
+      <div class="card-body">
+        <div class="macro-display">
+          <div class="macro-circle">
+            <div class="macro-value" id="todayCalories">0</div>
+            <div class="macro-label">Calories</div>
+          </div>
+          <div class="macro-bars">
+            <div class="macro-bar">
+              <div class="macro-label">Protein</div>
+              <div class="macro-progress">
+                <div class="macro-fill protein" style="width: 60%"></div>
+              </div>
+              <div class="macro-value" id="todayProtein">0g</div>
+            </div>
+            <div class="macro-bar">
+              <div class="macro-label">Carbs</div>
+              <div class="macro-progress">
+                <div class="macro-fill carbs" style="width: 45%"></div>
+              </div>
+              <div class="macro-value" id="todayCarbs">0g</div>
+            </div>
+            <div class="macro-bar">
+              <div class="macro-label">Fats</div>
+              <div class="macro-progress">
+                <div class="macro-fill fats" style="width: 50%"></div>
+              </div>
+              <div class="macro-value" id="todayFats">0g</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Macro Targets -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="macro_targets">Macro Targets</h3>
+      </div>
+      <div class="card-body">
+        <div class="target-list">
+          <div class="target-item">
+            <span class="label" data-i18n="daily_calories">Daily Calories</span>
+            <span class="value" id="targetCalories">2500</span>
+            <span class="unit">kcal</span>
+          </div>
+          <div class="target-item">
+            <span class="label" data-i18n="protein_target">Protein Target</span>
+            <span class="value" id="proteinTarget">150</span>
+            <span class="unit">g</span>
+          </div>
+          <div class="target-item">
+            <span class="label" data-i18n="carbs_target">Carbs Target</span>
+            <span class="value" id="carbsTarget">300</span>
+            <span class="unit">g</span>
+          </div>
+          <div class="target-item">
+            <span class="label" data-i18n="fats_target">Fats Target</span>
+            <span class="value" id="fatsTarget">80</span>
+            <span class="unit">g</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nutrition Chart -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="nutrition_history">Nutrition History</h3>
+        <div class="chart-controls">
+          <select id="nutritionPeriod" class="form-control">
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="nutritionChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Food Log -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="food_log">Food Log</h3>
+        <div class="filter-controls">
+          <input type="date" id="nutritionDateFilter" class="form-control">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="food-list" id="foodList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Record Nutrition Modal -->
+<div class="modal" id="nutritionModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="record_nutrition">Record Nutrition</h2>
+      <button class="btn-close" id="closeNutritionModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="nutritionForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="nutritionDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_meal">Meal Type</label>
+          <select id="mealType" class="form-control" required>
+            <option value="">Select Meal</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snack">Snack</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_food_item">Food Item</label>
+          <input type="text" id="foodItem" class="form-control" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_calories">Calories</label>
+            <input type="number" id="calories" class="form-control" step="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_protein">Protein (g)</label>
+            <input type="number" id="protein" class="form-control" step="0.1" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_carbs">Carbs (g)</label>
+            <input type="number" id="carbs" class="form-control" step="0.1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_fats">Fats (g)</label>
+            <input type="number" id="fats" class="form-control" step="0.1" required>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelNutrition">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .macro-display {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+  }
+
+  .macro-circle {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--color-primary) 0deg 144deg,
+      var(--color-success) 144deg 216deg,
+      var(--color-warning) 216deg 360deg
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+  }
+
+  .macro-circle .macro-value {
+    font-size: 1.5rem;
+  }
+
+  .macro-circle .macro-label {
+    font-size: 0.75rem;
+  }
+
+  .macro-bars {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .macro-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .macro-bar .macro-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .macro-progress {
+    height: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .macro-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .macro-fill.protein {
+    background-color: #ff6b6b;
+  }
+
+  .macro-fill.carbs {
+    background-color: #4ecdc4;
+  }
+
+  .macro-fill.fats {
+    background-color: #ffe66d;
+  }
+
+  .macro-bar .macro-value {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .target-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .target-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .target-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .target-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .food-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .food-info {
+    flex: 1;
+  }
+
+  .food-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .food-macros {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .food-calories {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 768px) {
+    .macro-display {
+      flex-direction: column;
+    }
+
+    .target-list {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const NutritionModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadNutritionData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('recordNutritionBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeNutritionModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelNutrition').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('nutritionForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveNutrition();
+      });
+    },
+    
+    loadNutritionData: function() {
+      // Mock data
+      document.getElementById('todayCalories').textContent = '2100';
+      document.getElementById('todayProtein').textContent = '150g';
+      document.getElementById('todayCarbs').textContent = '250g';
+      document.getElementById('todayFats').textContent = '70g';
+      
+      document.getElementById('targetCalories').textContent = '2500';
+      document.getElementById('proteinTarget').textContent = '150';
+      document.getElementById('carbsTarget').textContent = '300';
+      document.getElementById('fatsTarget').textContent = '80';
+      
+      this.loadFoodLog();
+    },
+    
+    loadFoodLog: function() {
+      const foods = [
+        { meal: 'Breakfast', item: 'Oatmeal with Berries', calories: 350, protein: 12, carbs: 60, fats: 8 },
+        { meal: 'Lunch', item: 'Grilled Chicken Breast', calories: 450, protein: 50, carbs: 30, fats: 15 },
+        { meal: 'Snack', item: 'Protein Shake', calories: 250, protein: 30, carbs: 20, fats: 5 }
+      ];
+      
+      const list = document.getElementById('foodList');
+      list.innerHTML = '';
+      
+      foods.forEach(food => {
+        const item = document.createElement('div');
+        item.className = 'food-item';
+        item.innerHTML = `
+          <div class="food-info">
+            <div class="food-name">${food.item}</div>
+            <div class="food-macros">${food.meal} • P: ${food.protein}g | C: ${food.carbs}g | F: ${food.fats}g</div>
+          </div>
+          <div class="food-calories">${food.calories} kcal</div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('nutritionDate').valueAsDate = new Date();
+      document.getElementById('nutritionModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('nutritionModal').style.display = 'none';
+      document.getElementById('nutritionForm').reset();
+    },
+    
+    saveNutrition: function() {
+      const date = document.getElementById('nutritionDate').value;
+      const meal = document.getElementById('mealType').value;
+      const food = document.getElementById('foodItem').value;
+      
+      console.log('Saving nutrition:', { date, meal, food });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadNutritionData();
+    }
+  };
+</script>

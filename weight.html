@@ -1,0 +1,362 @@
+<!-- Weight Tracking Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_weight">Weight</h2>
+    <button class="btn btn-primary" id="recordWeightBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Current Stats -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="current_stats">Current Stats</h3>
+      </div>
+      <div class="card-body">
+        <div class="weight-stats">
+          <div class="weight-stat">
+            <span class="label" data-i18n="current_weight">Current Weight</span>
+            <span class="value" id="currentWeight">82.5</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="weight-stat">
+            <span class="label" data-i18n="target_weight">Target Weight</span>
+            <span class="value" id="targetWeight">80</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="weight-stat">
+            <span class="label" data-i18n="difference">Difference</span>
+            <span class="value" id="weightDifference">+2.5</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="weight-stat">
+            <span class="label" data-i18n="progress">Progress</span>
+            <span class="value" id="weightProgress">0</span>
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weight Trend -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="weight_trend">Weight Trend</h3>
+      </div>
+      <div class="card-body">
+        <div class="trend-info">
+          <div class="trend-item">
+            <span class="label" data-i18n="max_weight">Max Weight</span>
+            <span class="value" id="maxWeight">86</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="trend-item">
+            <span class="label" data-i18n="min_weight">Min Weight</span>
+            <span class="value" id="minWeight">81</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="trend-item">
+            <span class="label" data-i18n="average_weight">Average Weight</span>
+            <span class="value" id="avgWeight">83.2</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="trend-item">
+            <span class="label" data-i18n="change_rate">Change Rate</span>
+            <span class="value" id="changeRate">-0.3</span>
+            <span class="unit">kg/week</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weight Chart -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="weight_history">Weight History</h3>
+        <div class="chart-controls">
+          <select id="chartPeriod" class="form-control">
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="180">Last 6 Months</option>
+            <option value="365">Last Year</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="weightChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weight Records -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="weight_records">Weight Records</h3>
+        <div class="filter-controls">
+          <input type="date" id="weightDateFilter" class="form-control">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="weight-list" id="weightList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Record Weight Modal -->
+<div class="modal" id="weightModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="record_weight">Record Weight</h2>
+      <button class="btn-close" id="closeWeightModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="weightForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="weightDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_weight">Weight (kg)</label>
+          <input type="number" id="weightValue" class="form-control" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="weightNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelWeight">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .weight-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .weight-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .weight-stat .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .weight-stat .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .weight-stat .unit {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .trend-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .trend-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .trend-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .trend-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .chart-controls {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .weight-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .weight-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .weight-item-info {
+    flex: 1;
+  }
+
+  .weight-item-date {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .weight-item-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .weight-item-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  @media (max-width: 768px) {
+    .weight-stats,
+    .trend-info {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const WeightModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadWeightData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('recordWeightBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeWeightModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelWeight').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('weightForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveWeight();
+      });
+      
+      document.getElementById('chartPeriod').addEventListener('change', () => {
+        this.loadWeightData();
+      });
+    },
+    
+    loadWeightData: function() {
+      // Mock data
+      const stats = {
+        currentWeight: 82.5,
+        targetWeight: 80,
+        maxWeight: 86,
+        minWeight: 81,
+        avgWeight: 83.2
+      };
+      
+      document.getElementById('currentWeight').textContent = stats.currentWeight;
+      document.getElementById('targetWeight').textContent = stats.targetWeight;
+      document.getElementById('maxWeight').textContent = stats.maxWeight;
+      document.getElementById('minWeight').textContent = stats.minWeight;
+      document.getElementById('avgWeight').textContent = stats.avgWeight;
+      
+      const diff = stats.currentWeight - stats.targetWeight;
+      document.getElementById('weightDifference').textContent = (diff > 0 ? '+' : '') + diff.toFixed(1);
+      
+      const progress = Math.max(0, ((stats.targetWeight - stats.currentWeight) / (stats.maxWeight - stats.targetWeight)) * 100);
+      document.getElementById('weightProgress').textContent = Math.round(progress);
+      
+      document.getElementById('changeRate').textContent = '-0.3';
+      
+      this.loadWeightRecords();
+    },
+    
+    loadWeightRecords: function() {
+      const records = [
+        { date: '2024-01-15', weight: 82.5 },
+        { date: '2024-01-14', weight: 82.7 },
+        { date: '2024-01-13', weight: 82.6 },
+        { date: '2024-01-12', weight: 83.0 }
+      ];
+      
+      const list = document.getElementById('weightList');
+      list.innerHTML = '';
+      
+      records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'weight-item';
+        item.innerHTML = `
+          <div class="weight-item-info">
+            <div class="weight-item-date">${Utils.formatDateReadable(record.date)}</div>
+            <div class="weight-item-value">${record.weight} kg</div>
+          </div>
+          <div class="weight-item-actions">
+            <button class="btn-icon" title="Edit">✏️</button>
+            <button class="btn-icon" title="Delete">🗑️</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('weightDate').valueAsDate = new Date();
+      document.getElementById('weightModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('weightModal').style.display = 'none';
+      document.getElementById('weightForm').reset();
+    },
+    
+    saveWeight: function() {
+      const date = document.getElementById('weightDate').value;
+      const weight = document.getElementById('weightValue').value;
+      const notes = document.getElementById('weightNotes').value;
+      
+      console.log('Saving weight:', { date, weight, notes });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadWeightData();
+    }
+  };
+</script>

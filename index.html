@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Fitness Operating System - PFOS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💪</span>
+                    <span class="logo-text">PFOS</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="#dashboard" class="nav-link" data-page="dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text" data-i18n="nav_dashboard">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#attendance" class="nav-link" data-page="attendance">
+                        <span class="nav-icon">✅</span>
+                        <span class="nav-text" data-i18n="nav_attendance">Attendance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#workouts" class="nav-link" data-page="workouts">
+                        <span class="nav-icon">🏋️</span>
+                        <span class="nav-text" data-i18n="nav_workouts">Workouts</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#measurements" class="nav-link" data-page="measurements">
+                        <span class="nav-icon">📏</span>
+                        <span class="nav-text" data-i18n="nav_measurements">Measurements</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#weight" class="nav-link" data-page="weight">
+                        <span class="nav-icon">⚖️</span>
+                        <span class="nav-text" data-i18n="nav_weight">Weight</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#nutrition" class="nav-link" data-page="nutrition">
+                        <span class="nav-icon">🍎</span>
+                        <span class="nav-text" data-i18n="nav_nutrition">Nutrition</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#water" class="nav-link" data-page="water">
+                        <span class="nav-icon">💧</span>
+                        <span class="nav-text" data-i18n="nav_water">Water</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#sleep" class="nav-link" data-page="sleep">
+                        <span class="nav-icon">😴</span>
+                        <span class="nav-text" data-i18n="nav_sleep">Sleep</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#habits" class="nav-link" data-page="habits">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text" data-i18n="nav_habits">Habits</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#inbody" class="nav-link" data-page="inbody">
+                        <span class="nav-icon">📸</span>
+                        <span class="nav-text" data-i18n="nav_inbody">InBody</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#goals" class="nav-link" data-page="goals">
+                        <span class="nav-icon">🎪</span>
+                        <span class="nav-text" data-i18n="nav_goals">Goals</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#photos" class="nav-link" data-page="photos">
+                        <span class="nav-icon">🖼️</span>
+                        <span class="nav-text" data-i18n="nav_photos">Progress Photos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link" data-page="reports">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text" data-i18n="nav_reports">Reports</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="user-section">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-status" data-i18n="status_online">Online</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title" data-i18n="dashboard_title">Dashboard</h1>
+                    <p class="page-subtitle" data-i18n="dashboard_subtitle">Welcome to your fitness journey</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-controls">
+                        <!-- Theme Toggle -->
+                        <button class="btn-icon" id="themeToggle" title="Toggle dark/light mode">
+                            <span class="theme-icon">🌙</span>
+                        </button>
+                        
+                        <!-- Language Toggle -->
+                        <button class="btn-icon" id="languageToggle" title="Toggle language">
+                            <span class="lang-text">EN</span>
+                        </button>
+                        
+                        <!-- Settings -->
+                        <button class="btn-icon" id="settingsBtn" title="Settings">
+                            <span>⚙️</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content Container -->
+            <div class="content-container">
+                <!-- Dashboard Page -->
+                <div class="page" id="dashboard-page" data-page="dashboard">
+                    <div class="dashboard-grid">
+                        <!-- Today's Status Section -->
+                        <section class="card card-full">
+                            <div class="card-header">
+                                <h2 data-i18n="today_status">Today's Status</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="status-grid">
+                                    <div class="status-item">
+                                        <label data-i18n="status_gym">Gym</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusGym" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_workout">Workout</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusWorkout" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_cardio">Cardio</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusCardio" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_water">Water</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusWater" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_calories">Calories</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusCalories" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_protein">Protein</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusProtein" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <label data-i18n="status_sleep">Sleep</label>
+                                        <div class="status-toggle">
+                                            <input type="checkbox" id="statusSleep" class="status-checkbox">
+                                            <span class="status-indicator"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Quick Stats Section -->
+                        <section class="card">
+                            <div class="card-header">
+                                <h2 data-i18n="quick_stats">Quick Stats</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="current_weight">Current Weight</span>
+                                    <span class="stat-value" id="currentWeight">--</span>
+                                    <span class="stat-unit">kg</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="target_weight">Target Weight</span>
+                                    <span class="stat-value" id="targetWeight">--</span>
+                                    <span class="stat-unit">kg</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="body_fat">Body Fat %</span>
+                                    <span class="stat-value" id="bodyFat">--</span>
+                                    <span class="stat-unit">%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="muscle_mass">Muscle Mass</span>
+                                    <span class="stat-value" id="muscleMass">--</span>
+                                    <span class="stat-unit">kg</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Attendance Stats Section -->
+                        <section class="card">
+                            <div class="card-header">
+                                <h2 data-i18n="attendance_stats">Attendance</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="attendance_rate">Attendance Rate</span>
+                                    <span class="stat-value" id="attendanceRate">--</span>
+                                    <span class="stat-unit">%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="current_streak">Current Streak</span>
+                                    <span class="stat-value" id="currentStreak">--</span>
+                                    <span class="stat-unit" data-i18n="days">days</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="longest_streak">Longest Streak</span>
+                                    <span class="stat-value" id="longestStreak">--</span>
+                                    <span class="stat-unit" data-i18n="days">days</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label" data-i18n="discipline_score">Discipline Score</span>
+                                    <span class="stat-value" id="disciplineScore">--</span>
+                                    <span class="stat-unit">/100</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Monthly Progress Section -->
+                        <section class="card card-full">
+                            <div class="card-header">
+                                <h2 data-i18n="monthly_progress">Monthly Progress</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="monthlyChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Recent Activity Section -->
+                        <section class="card card-full">
+                            <div class="card-header">
+                                <h2 data-i18n="recent_activity">Recent Activity</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-list" id="activityList">
+                                    <p class="empty-state" data-i18n="no_activity">No recent activity</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Placeholder for other pages -->
+                <div class="page" id="attendance-page" data-page="attendance" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_attendance">Attendance</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="workouts-page" data-page="workouts" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_workouts">Workouts</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="measurements-page" data-page="measurements" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_measurements">Measurements</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="weight-page" data-page="weight" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_weight">Weight</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="nutrition-page" data-page="nutrition" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_nutrition">Nutrition</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="water-page" data-page="water" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_water">Water</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="sleep-page" data-page="sleep" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_sleep">Sleep</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="habits-page" data-page="habits" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_habits">Habits</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="inbody-page" data-page="inbody" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_inbody">InBody</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="goals-page" data-page="goals" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_goals">Goals</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="photos-page" data-page="photos" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_photos">Progress Photos</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="reports-page" data-page="reports" style="display: none;">
+                    <div class="card card-full">
+                        <div class="card-header">
+                            <h2 data-i18n="nav_reports">Reports</h2>
+                        </div>
+                        <div class="card-body">
+                            <p data-i18n="page_under_development">This page is under development</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for settings -->
+    <div class="modal" id="settingsModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="settings">Settings</h2>
+                <button class="btn-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p data-i18n="settings_coming_soon">Settings panel coming soon</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="i18n.js"></script>
+    <script src="utils.js"></script>
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

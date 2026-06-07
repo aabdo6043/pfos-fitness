@@ -1,0 +1,456 @@
+<!-- Attendance Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_attendance">Attendance</h2>
+    <button class="btn btn-primary" id="logAttendanceBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Quick Actions -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="quick_actions">Quick Actions</h3>
+      </div>
+      <div class="card-body">
+        <div class="quick-actions">
+          <button class="action-btn action-present" data-status="Present">
+            <span class="action-icon">✅</span>
+            <span data-i18n="status_present">Present</span>
+          </button>
+          <button class="action-btn action-absent" data-status="Absent">
+            <span class="action-icon">❌</span>
+            <span data-i18n="status_absent">Absent</span>
+          </button>
+          <button class="action-btn action-rest" data-status="Rest">
+            <span class="action-icon">😴</span>
+            <span data-i18n="status_rest">Rest</span>
+          </button>
+          <button class="action-btn action-injury" data-status="Injury">
+            <span class="action-icon">🩹</span>
+            <span data-i18n="status_injury">Injury</span>
+          </button>
+          <button class="action-btn action-travel" data-status="Travel">
+            <span class="action-icon">✈️</span>
+            <span data-i18n="status_travel">Travel</span>
+          </button>
+          <button class="action-btn action-cheat" data-status="Cheat">
+            <span class="action-icon">😅</span>
+            <span data-i18n="status_cheat">Cheat</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="statistics">Statistics</h3>
+      </div>
+      <div class="card-body">
+        <div class="stat-grid">
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="total_days">Total Days</span>
+            <span class="stat-number" id="totalDays">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="present_days">Present Days</span>
+            <span class="stat-number" id="presentDays">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="absent_days">Absent Days</span>
+            <span class="stat-number" id="absentDays">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="rest_days">Rest Days</span>
+            <span class="stat-number" id="restDays">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Monthly Calendar -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="monthly_calendar">Monthly Calendar</h3>
+        <div class="calendar-controls">
+          <button class="btn-icon" id="prevMonth">◀</button>
+          <span id="currentMonth"></span>
+          <button class="btn-icon" id="nextMonth">▶</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="calendar" id="attendanceCalendar"></div>
+      </div>
+    </section>
+
+    <!-- Attendance History -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="attendance_history">Attendance History</h3>
+        <div class="filter-controls">
+          <select id="monthFilter" class="form-control">
+            <option value="">All Months</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="attendance-list" id="attendanceList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Add Attendance Modal -->
+<div class="modal" id="attendanceModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="log_attendance">Log Attendance</h2>
+      <button class="btn-close" id="closeAttendanceModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="attendanceForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="attendanceDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_status">Status</label>
+          <select id="attendanceStatus" class="form-control" required>
+            <option value="">Select Status</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+            <option value="Rest">Rest</option>
+            <option value="Cheat">Cheat</option>
+            <option value="Injury">Injury</option>
+            <option value="Travel">Travel</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="attendanceNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelAttendance">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .module-content {
+    display: block;
+  }
+
+  .module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .module-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-weight: 600;
+  }
+
+  .action-btn:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .action-icon {
+    font-size: 1.5rem;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-sm);
+  }
+
+  .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all var(--transition-base);
+  }
+
+  .calendar-day:hover {
+    background-color: var(--bg-secondary);
+  }
+
+  .calendar-day.present {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: var(--color-success);
+    font-weight: 600;
+  }
+
+  .calendar-day.absent {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: var(--color-danger);
+  }
+
+  .attendance-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .attendance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .attendance-info {
+    flex: 1;
+  }
+
+  .attendance-date {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .attendance-status {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .attendance-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+  }
+
+  .form-actions button {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .quick-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Attendance module functionality
+  const AttendanceModule = {
+    currentMonth: new Date(),
+    
+    init: function() {
+      this.setupEventListeners();
+      this.loadAttendanceData();
+      this.renderCalendar();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('logAttendanceBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeAttendanceModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelAttendance').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('attendanceForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveAttendance();
+      });
+      
+      document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const status = btn.getAttribute('data-status');
+          this.quickLog(status);
+        });
+      });
+      
+      document.getElementById('prevMonth').addEventListener('click', () => {
+        this.currentMonth.setMonth(this.currentMonth.getMonth() - 1);
+        this.renderCalendar();
+      });
+      
+      document.getElementById('nextMonth').addEventListener('click', () => {
+        this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
+        this.renderCalendar();
+      });
+    },
+    
+    loadAttendanceData: function() {
+      // Mock data
+      const stats = {
+        totalDays: 45,
+        presentDays: 40,
+        absentDays: 3,
+        restDays: 2
+      };
+      
+      document.getElementById('totalDays').textContent = stats.totalDays;
+      document.getElementById('presentDays').textContent = stats.presentDays;
+      document.getElementById('absentDays').textContent = stats.absentDays;
+      document.getElementById('restDays').textContent = stats.restDays;
+    },
+    
+    renderCalendar: function() {
+      const year = this.currentMonth.getFullYear();
+      const month = this.currentMonth.getMonth();
+      
+      document.getElementById('currentMonth').textContent = 
+        this.currentMonth.toLocaleDateString(i18n.currentLanguage === 'ar' ? 'ar-SA' : 'en-US', 
+          { month: 'long', year: 'numeric' });
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      const calendar = document.getElementById('attendanceCalendar');
+      calendar.innerHTML = '';
+      
+      // Empty cells for days before month starts
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day';
+        emptyDay.style.visibility = 'hidden';
+        calendar.appendChild(emptyDay);
+      }
+      
+      // Days of month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = day;
+        
+        // Mock: Mark some days as present
+        if (day % 3 !== 0) {
+          dayElement.classList.add('present');
+        } else if (day % 5 === 0) {
+          dayElement.classList.add('absent');
+        }
+        
+        calendar.appendChild(dayElement);
+      }
+    },
+    
+    showModal: function() {
+      document.getElementById('attendanceDate').valueAsDate = new Date();
+      document.getElementById('attendanceModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('attendanceModal').style.display = 'none';
+      document.getElementById('attendanceForm').reset();
+    },
+    
+    saveAttendance: function() {
+      const date = document.getElementById('attendanceDate').value;
+      const status = document.getElementById('attendanceStatus').value;
+      const notes = document.getElementById('attendanceNotes').value;
+      
+      console.log('Saving attendance:', { date, status, notes });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadAttendanceData();
+    },
+    
+    quickLog: function(status) {
+      const today = Utils.getCurrentDate();
+      console.log('Quick logging:', { date: today, status });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.loadAttendanceData();
+    }
+  };
+</script>

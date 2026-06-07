@@ -1,0 +1,379 @@
+<!-- Body Measurements Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_measurements">Measurements</h2>
+    <button class="btn btn-primary" id="recordMeasurementBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Current Measurements -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="current_measurements">Current Measurements</h3>
+      </div>
+      <div class="card-body">
+        <div class="measurements-list">
+          <div class="measurement-item">
+            <span class="label">Chest</span>
+            <span class="value" id="chest">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Shoulders</span>
+            <span class="value" id="shoulders">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Arms</span>
+            <span class="value" id="arms">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Forearms</span>
+            <span class="value" id="forearms">--</span>
+            <span class="unit">cm</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- More Measurements -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="more_measurements">More Measurements</h3>
+      </div>
+      <div class="card-body">
+        <div class="measurements-list">
+          <div class="measurement-item">
+            <span class="label">Waist</span>
+            <span class="value" id="waist">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Hips</span>
+            <span class="value" id="hips">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Thighs</span>
+            <span class="value" id="thighs">--</span>
+            <span class="unit">cm</span>
+          </div>
+          <div class="measurement-item">
+            <span class="label">Calves</span>
+            <span class="value" id="calves">--</span>
+            <span class="unit">cm</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Measurement Progress -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="measurement_progress">Measurement Progress</h3>
+        <div class="chart-controls">
+          <select id="measurementSelect" class="form-control">
+            <option value="chest">Chest</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="arms">Arms</option>
+            <option value="waist">Waist</option>
+            <option value="thighs">Thighs</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="measurementChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Measurement History -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="measurement_history">Measurement History</h3>
+        <div class="filter-controls">
+          <input type="date" id="measurementDateFilter" class="form-control">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="measurements-history" id="measurementHistory">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Record Measurement Modal -->
+<div class="modal" id="measurementModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="record_measurement">Record Measurement</h2>
+      <button class="btn-close" id="closeMeasurementModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="measurementForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="measurementDate" class="form-control" required>
+        </div>
+        
+        <div class="measurements-grid">
+          <div class="form-group">
+            <label class="form-label">Chest (cm)</label>
+            <input type="number" id="chestInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Shoulders (cm)</label>
+            <input type="number" id="shouldersInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Arms (cm)</label>
+            <input type="number" id="armsInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Forearms (cm)</label>
+            <input type="number" id="forearmsInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Waist (cm)</label>
+            <input type="number" id="waistInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hips (cm)</label>
+            <input type="number" id="hipsInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Thighs (cm)</label>
+            <input type="number" id="thighsInput" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Calves (cm)</label>
+            <input type="number" id="calvesInput" class="form-control" step="0.1">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="measurementNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelMeasurement">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .measurements-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .measurement-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .measurement-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .measurement-item .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .measurement-item .unit {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .measurements-history {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .measurement-record {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .record-date {
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .record-measurements {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  .record-measurement {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .record-measurement-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .record-measurement-value {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .measurements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 768px) {
+    .measurements-list {
+      grid-template-columns: 1fr;
+    }
+
+    .measurements-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .record-measurements {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const MeasurementModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadMeasurementData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('recordMeasurementBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeMeasurementModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelMeasurement').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('measurementForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveMeasurement();
+      });
+    },
+    
+    loadMeasurementData: function() {
+      // Mock data
+      const measurements = {
+        chest: 100,
+        shoulders: 120,
+        arms: 35,
+        forearms: 28,
+        waist: 85,
+        hips: 95,
+        thighs: 58,
+        calves: 38
+      };
+      
+      Object.keys(measurements).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = measurements[key];
+        }
+      });
+      
+      this.loadMeasurementHistory();
+    },
+    
+    loadMeasurementHistory: function() {
+      const records = [
+        {
+          date: '2024-01-15',
+          measurements: { chest: 100, shoulders: 120, arms: 35, forearms: 28, waist: 85, hips: 95, thighs: 58, calves: 38 }
+        },
+        {
+          date: '2024-01-08',
+          measurements: { chest: 99, shoulders: 119, arms: 34.5, forearms: 27.5, waist: 86, hips: 96, thighs: 57.5, calves: 37.5 }
+        }
+      ];
+      
+      const history = document.getElementById('measurementHistory');
+      history.innerHTML = '';
+      
+      records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'measurement-record';
+        
+        let measurementsHTML = '';
+        Object.entries(record.measurements).forEach(([key, value]) => {
+          measurementsHTML += `
+            <div class="record-measurement">
+              <span class="record-measurement-label">${key.charAt(0).toUpperCase() + key.slice(1)}</span>
+              <span class="record-measurement-value">${value} cm</span>
+            </div>
+          `;
+        });
+        
+        item.innerHTML = `
+          <div class="record-date">${Utils.formatDateReadable(record.date)}</div>
+          <div class="record-measurements">${measurementsHTML}</div>
+        `;
+        
+        history.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('measurementDate').valueAsDate = new Date();
+      document.getElementById('measurementModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('measurementModal').style.display = 'none';
+      document.getElementById('measurementForm').reset();
+    },
+    
+    saveMeasurement: function() {
+      const date = document.getElementById('measurementDate').value;
+      
+      console.log('Saving measurement for:', date);
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadMeasurementData();
+    }
+  };
+</script>

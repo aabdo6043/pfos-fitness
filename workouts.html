@@ -1,0 +1,457 @@
+<!-- Workouts Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_workouts">Workouts</h2>
+    <button class="btn btn-primary" id="logWorkoutBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Workout Programs -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="active_programs">Active Programs</h3>
+      </div>
+      <div class="card-body">
+        <div class="programs-list" id="programsList">
+          <div class="program-item">
+            <div class="program-name">Push/Pull/Legs</div>
+            <div class="program-days">3 days/week</div>
+          </div>
+          <div class="program-item">
+            <div class="program-name">Upper/Lower</div>
+            <div class="program-days">4 days/week</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workout Stats -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="workout_stats">Workout Stats</h3>
+      </div>
+      <div class="card-body">
+        <div class="stats-list">
+          <div class="stat-item">
+            <span class="label" data-i18n="workouts_this_week">Workouts This Week</span>
+            <span class="value" id="workoutsThisWeek">3</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="total_volume">Total Volume</span>
+            <span class="value" id="totalVolume">15,000</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="avg_duration">Avg Duration</span>
+            <span class="value" id="avgDuration">60</span>
+            <span class="unit">min</span>
+          </div>
+          <div class="stat-item">
+            <span class="label" data-i18n="total_exercises">Total Exercises</span>
+            <span class="value" id="totalExercises">45</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Workouts -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="recent_workouts">Recent Workouts</h3>
+        <div class="filter-controls">
+          <input type="date" id="workoutDateFilter" class="form-control">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="workouts-list" id="workoutsList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exercise Library -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="exercise_library">Exercise Library</h3>
+        <div class="filter-controls">
+          <select id="muscleGroupFilter" class="form-control">
+            <option value="">All Muscle Groups</option>
+            <option value="Chest">Chest</option>
+            <option value="Back">Back</option>
+            <option value="Shoulders">Shoulders</option>
+            <option value="Biceps">Biceps</option>
+            <option value="Triceps">Triceps</option>
+            <option value="Legs">Legs</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="exercises-list" id="exercisesList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Log Workout Modal -->
+<div class="modal" id="workoutModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="log_workout">Log Workout</h2>
+      <button class="btn-close" id="closeWorkoutModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="workoutForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="workoutDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_program">Program</label>
+          <select id="workoutProgram" class="form-control" required>
+            <option value="">Select Program</option>
+            <option value="Push">Push</option>
+            <option value="Pull">Pull</option>
+            <option value="Legs">Legs</option>
+            <option value="Upper">Upper</option>
+            <option value="Lower">Lower</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_exercise">Exercise</label>
+          <input type="text" id="exerciseName" class="form-control" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_sets">Sets</label>
+            <input type="number" id="sets" class="form-control" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_reps">Reps</label>
+            <input type="number" id="reps" class="form-control" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_weight">Weight (kg)</label>
+            <input type="number" id="weight" class="form-control" step="0.5" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="workoutNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelWorkout">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .programs-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .program-item {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--color-primary);
+  }
+
+  .program-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .program-days {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .stats-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .stat-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .stat-item .unit {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .workouts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .workout-item {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .workout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .workout-title {
+    font-weight: 600;
+  }
+
+  .workout-date {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .workout-exercises {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .exercise-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+  }
+
+  .exercise-name {
+    font-weight: 500;
+  }
+
+  .exercise-details {
+    color: var(--text-secondary);
+  }
+
+  .exercises-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .exercise-card {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .exercise-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+  }
+
+  .exercise-card-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .exercise-card-muscle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .exercise-card-btn {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all var(--transition-base);
+  }
+
+  .exercise-card-btn:hover {
+    background-color: var(--color-primary-dark);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 768px) {
+    .stats-list {
+      grid-template-columns: 1fr;
+    }
+
+    .exercises-list {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const WorkoutModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadWorkoutData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('logWorkoutBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeWorkoutModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelWorkout').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('workoutForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveWorkout();
+      });
+    },
+    
+    loadWorkoutData: function() {
+      document.getElementById('workoutsThisWeek').textContent = '3';
+      document.getElementById('totalVolume').textContent = '15,000';
+      document.getElementById('avgDuration').textContent = '60';
+      document.getElementById('totalExercises').textContent = '45';
+      
+      this.loadRecentWorkouts();
+      this.loadExerciseLibrary();
+    },
+    
+    loadRecentWorkouts: function() {
+      const workouts = [
+        { date: '2024-01-15', program: 'Push', exercises: 6, duration: 65 },
+        { date: '2024-01-13', program: 'Pull', exercises: 5, duration: 55 },
+        { date: '2024-01-11', program: 'Legs', exercises: 7, duration: 70 }
+      ];
+      
+      const list = document.getElementById('workoutsList');
+      list.innerHTML = '';
+      
+      workouts.forEach(workout => {
+        const item = document.createElement('div');
+        item.className = 'workout-item';
+        item.innerHTML = `
+          <div class="workout-header">
+            <div>
+              <div class="workout-title">${workout.program} Day</div>
+              <div class="workout-date">${Utils.formatDateReadable(workout.date)}</div>
+            </div>
+            <div>${workout.exercises} exercises • ${workout.duration} min</div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    loadExerciseLibrary: function() {
+      const exercises = [
+        { name: 'Bench Press', muscle: 'Chest' },
+        { name: 'Squats', muscle: 'Legs' },
+        { name: 'Deadlifts', muscle: 'Back' },
+        { name: 'Shoulder Press', muscle: 'Shoulders' },
+        { name: 'Barbell Rows', muscle: 'Back' },
+        { name: 'Leg Press', muscle: 'Legs' }
+      ];
+      
+      const list = document.getElementById('exercisesList');
+      list.innerHTML = '';
+      
+      exercises.forEach(exercise => {
+        const card = document.createElement('div');
+        card.className = 'exercise-card';
+        card.innerHTML = `
+          <div class="exercise-card-name">${exercise.name}</div>
+          <div class="exercise-card-muscle">${exercise.muscle}</div>
+          <button class="exercise-card-btn" onclick="WorkoutModule.selectExercise('${exercise.name}')">
+            Select
+          </button>
+        `;
+        list.appendChild(card);
+      });
+    },
+    
+    selectExercise: function(exerciseName) {
+      document.getElementById('exerciseName').value = exerciseName;
+      this.showModal();
+    },
+    
+    showModal: function() {
+      document.getElementById('workoutDate').valueAsDate = new Date();
+      document.getElementById('workoutModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('workoutModal').style.display = 'none';
+      document.getElementById('workoutForm').reset();
+    },
+    
+    saveWorkout: function() {
+      const date = document.getElementById('workoutDate').value;
+      const exercise = document.getElementById('exerciseName').value;
+      const sets = document.getElementById('sets').value;
+      const reps = document.getElementById('reps').value;
+      const weight = document.getElementById('weight').value;
+      
+      console.log('Saving workout:', { date, exercise, sets, reps, weight });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadWorkoutData();
+    }
+  };
+</script>

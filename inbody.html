@@ -1,0 +1,538 @@
+<!-- InBody Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_inbody">InBody Analysis</h2>
+    <button class="btn btn-primary" id="uploadInBodyBtn">
+      <span>📤</span>
+      <span data-i18n="btn_upload">Upload</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Latest InBody Results -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="latest_results">Latest InBody Results</h3>
+      </div>
+      <div class="card-body">
+        <div class="inbody-latest" id="latestInBody">
+          <p class="empty-state" data-i18n="no_records">No InBody reports yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Body Composition -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="body_composition">Body Composition</h3>
+      </div>
+      <div class="card-body">
+        <div class="composition-chart">
+          <div class="composition-item">
+            <span class="label" data-i18n="muscle_mass">Muscle Mass</span>
+            <div class="composition-bar">
+              <div class="composition-fill muscle" style="width: 65%"></div>
+            </div>
+            <span class="value" id="muscleMass">0</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="composition-item">
+            <span class="label" data-i18n="body_fat">Body Fat</span>
+            <div class="composition-bar">
+              <div class="composition-fill fat" style="width: 25%"></div>
+            </div>
+            <span class="value" id="bodyFat">0</span>
+            <span class="unit">kg</span>
+          </div>
+          <div class="composition-item">
+            <span class="label" data-i18n="water_percentage">Water %</span>
+            <div class="composition-bar">
+              <div class="composition-fill water" style="width: 60%"></div>
+            </div>
+            <span class="value" id="waterPercentage">0</span>
+            <span class="unit">%</span>
+          </div>
+          <div class="composition-item">
+            <span class="label" data-i18n="mineral_mass">Mineral Mass</span>
+            <div class="composition-bar">
+              <div class="composition-fill mineral" style="width: 10%"></div>
+            </div>
+            <span class="value" id="mineralMass">0</span>
+            <span class="unit">kg</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="key_metrics">Key Metrics</h3>
+      </div>
+      <div class="card-body">
+        <div class="metrics-list">
+          <div class="metric-item">
+            <span class="label" data-i18n="bmi">BMI</span>
+            <span class="value" id="bmi">0</span>
+          </div>
+          <div class="metric-item">
+            <span class="label" data-i18n="bmr">BMR</span>
+            <span class="value" id="bmr">0</span>
+            <span class="unit">kcal</span>
+          </div>
+          <div class="metric-item">
+            <span class="label" data-i18n="metabolic_age">Metabolic Age</span>
+            <span class="value" id="metabolicAge">0</span>
+            <span class="unit">years</span>
+          </div>
+          <div class="metric-item">
+            <span class="label" data-i18n="visceral_fat">Visceral Fat</span>
+            <span class="value" id="visceralFat">0</span>
+            <span class="unit">Level</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- InBody History -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="inbody_history">InBody History</h3>
+        <div class="filter-controls">
+          <select id="inbodyPeriod" class="form-control">
+            <option value="6">Last 6 Months</option>
+            <option value="12">Last Year</option>
+            <option value="24">Last 2 Years</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="inbody-list" id="inbodyList">
+          <p class="empty-state" data-i18n="no_records">No records found</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Comparison -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="progress_comparison">Progress Comparison</h3>
+      </div>
+      <div class="card-body">
+        <div class="comparison-chart">
+          <canvas id="inbodyProgressChart"></canvas>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Upload InBody Modal -->
+<div class="modal" id="inbodyModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="upload_inbody">Upload InBody Report</h2>
+      <button class="btn-close" id="closeInBodyModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="inbodyForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_date">Date</label>
+          <input type="date" id="inbodyDate" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_image">Upload Image</label>
+          <div class="file-upload">
+            <input type="file" id="inbodyImage" class="file-input" accept="image/*" required>
+            <div class="file-upload-area">
+              <span class="upload-icon">📸</span>
+              <span class="upload-text" data-i18n="click_to_upload">Click to upload or drag and drop</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_weight">Weight (kg)</label>
+          <input type="number" id="inbodyWeight" class="form-control" step="0.1" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="muscle_mass">Muscle Mass (kg)</label>
+            <input type="number" id="inbodyMuscleMass" class="form-control" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="body_fat">Body Fat %</label>
+            <input type="number" id="inbodyBodyFat" class="form-control" step="0.1">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_notes">Notes</label>
+          <textarea id="inbodyNotes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelInBody">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .inbody-latest {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .inbody-card {
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .inbody-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .inbody-card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .inbody-date {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .inbody-weight {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .inbody-stats {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: 0.9rem;
+  }
+
+  .composition-chart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .composition-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .composition-item .label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .composition-bar {
+    height: 12px;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .composition-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+  }
+
+  .composition-fill.muscle {
+    background: linear-gradient(90deg, #ff6b6b, #ff8787);
+  }
+
+  .composition-fill.fat {
+    background: linear-gradient(90deg, #ffd93d, #ffed4e);
+  }
+
+  .composition-fill.water {
+    background: linear-gradient(90deg, #6bcf7f, #4ecdc4);
+  }
+
+  .composition-fill.mineral {
+    background: linear-gradient(90deg, #a29bfe, #74b9ff);
+  }
+
+  .composition-item .value {
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .metrics-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .metric-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .metric-item .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .metric-item .unit {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .inbody-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .inbody-item {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .inbody-item-info {
+    flex: 1;
+  }
+
+  .inbody-item-date {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .inbody-item-stats {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .file-upload {
+    position: relative;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .file-upload-area {
+    padding: var(--spacing-xl);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .file-upload-area:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .upload-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .upload-text {
+    display: block;
+    color: var(--text-secondary);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 768px) {
+    .inbody-latest {
+      grid-template-columns: 1fr;
+    }
+
+    .metrics-list {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const InBodyModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadInBodyData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('uploadInBodyBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeInBodyModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelInBody').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('inbodyForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveInBody();
+      });
+      
+      // File upload drag and drop
+      const fileUploadArea = document.querySelector('.file-upload-area');
+      fileUploadArea.addEventListener('click', () => {
+        document.getElementById('inbodyImage').click();
+      });
+      
+      fileUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadArea.style.borderColor = 'var(--color-primary)';
+      });
+      
+      fileUploadArea.addEventListener('dragleave', () => {
+        fileUploadArea.style.borderColor = 'var(--border-color)';
+      });
+      
+      fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          document.getElementById('inbodyImage').files = files;
+        }
+      });
+    },
+    
+    loadInBodyData: function() {
+      // Mock data
+      document.getElementById('muscleMass').textContent = '62.5';
+      document.getElementById('bodyFat').textContent = '18.5';
+      document.getElementById('waterPercentage').textContent = '60';
+      document.getElementById('mineralMass').textContent = '4.2';
+      
+      document.getElementById('bmi').textContent = '25.3';
+      document.getElementById('bmr').textContent = '1850';
+      document.getElementById('metabolicAge').textContent = '28';
+      document.getElementById('visceralFat').textContent = '6';
+      
+      this.loadInBodyHistory();
+      this.loadLatestResults();
+    },
+    
+    loadLatestResults: function() {
+      const latest = {
+        date: '2024-01-15',
+        weight: 82.5,
+        muscleMass: 62.5,
+        bodyFat: 18.5
+      };
+      
+      const container = document.getElementById('latestInBody');
+      container.innerHTML = `
+        <div class="inbody-card">
+          <div class="inbody-card-content">
+            <div class="inbody-date">${Utils.formatDateReadable(latest.date)}</div>
+            <div class="inbody-weight">${latest.weight} kg</div>
+            <div class="inbody-stats">
+              <span>💪 ${latest.muscleMass} kg</span>
+              <span>🍔 ${latest.bodyFat}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+    
+    loadInBodyHistory: function() {
+      const records = [
+        { date: '2024-01-15', weight: 82.5, muscle: 62.5, fat: 18.5 },
+        { date: '2024-01-08', weight: 83.0, muscle: 62.0, fat: 19.0 },
+        { date: '2024-01-01', weight: 83.5, muscle: 61.5, fat: 19.5 }
+      ];
+      
+      const list = document.getElementById('inbodyList');
+      list.innerHTML = '';
+      
+      records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'inbody-item';
+        item.innerHTML = `
+          <div class="inbody-item-info">
+            <div class="inbody-item-date">${Utils.formatDateReadable(record.date)}</div>
+            <div class="inbody-item-stats">Weight: ${record.weight} kg | Muscle: ${record.muscle} kg | Fat: ${record.fat}%</div>
+          </div>
+          <button class="btn-icon" title="View">👁️</button>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('inbodyDate').valueAsDate = new Date();
+      document.getElementById('inbodyModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('inbodyModal').style.display = 'none';
+      document.getElementById('inbodyForm').reset();
+    },
+    
+    saveInBody: function() {
+      const date = document.getElementById('inbodyDate').value;
+      const weight = document.getElementById('inbodyWeight').value;
+      
+      console.log('Saving InBody:', { date, weight });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadInBodyData();
+    }
+  };
+</script>

@@ -1,0 +1,538 @@
+<!-- Goals Module -->
+<div class="module-content">
+  <div class="module-header">
+    <h2 data-i18n="nav_goals">Fitness Goals</h2>
+    <button class="btn btn-primary" id="createGoalBtn">
+      <span>➕</span>
+      <span data-i18n="btn_add">Add</span>
+    </button>
+  </div>
+
+  <div class="module-grid">
+    <!-- Goals Overview -->
+    <section class="card">
+      <div class="card-header">
+        <h3 data-i18n="goals_overview">Goals Overview</h3>
+      </section>
+      <div class="card-body">
+        <div class="overview-stats">
+          <div class="overview-item">
+            <span class="label" data-i18n="total_goals">Total Goals</span>
+            <span class="value" id="totalGoals">0</span>
+          </div>
+          <div class="overview-item">
+            <span class="label" data-i18n="active_goals">Active</span>
+            <span class="value" id="activeGoals">0</span>
+          </div>
+          <div class="overview-item">
+            <span class="label" data-i18n="completed_goals">Completed</span>
+            <span class="value" id="completedGoals">0</span>
+          </div>
+          <div class="overview-item">
+            <span class="label" data-i18n="completion_rate">Completion Rate</span>
+            <span class="value" id="goalCompletionRate">0</span>
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Goals -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="active_goals">Active Goals</h3>
+        <div class="filter-controls">
+          <select id="goalTypeFilter" class="form-control">
+            <option value="">All Types</option>
+            <option value="Weight">Weight Loss</option>
+            <option value="Muscle">Muscle Gain</option>
+            <option value="Strength">Strength</option>
+            <option value="Endurance">Endurance</option>
+            <option value="Flexibility">Flexibility</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="goals-list" id="activeGoalsList">
+          <p class="empty-state" data-i18n="no_records">No active goals</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Completed Goals -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="completed_goals">Completed Goals</h3>
+      </div>
+      <div class="card-body">
+        <div class="goals-list" id="completedGoalsList">
+          <p class="empty-state" data-i18n="no_records">No completed goals</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Goal Categories -->
+    <section class="card card-full">
+      <div class="card-header">
+        <h3 data-i18n="goal_categories">Goal Categories</h3>
+      </div>
+      <div class="card-body">
+        <div class="categories-grid" id="categoriesGrid">
+          <!-- Categories will be populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Create Goal Modal -->
+<div class="modal" id="goalModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="create_goal">Create Goal</h2>
+      <button class="btn-close" id="closeGoalModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="goalForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_goal_name">Goal Name</label>
+          <input type="text" id="goalName" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_goal_type">Goal Type</label>
+          <select id="goalType" class="form-control" required>
+            <option value="">Select Type</option>
+            <option value="Weight">Weight Loss</option>
+            <option value="Muscle">Muscle Gain</option>
+            <option value="Strength">Strength</option>
+            <option value="Endurance">Endurance</option>
+            <option value="Flexibility">Flexibility</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_start_date">Start Date</label>
+            <input type="date" id="goalStartDate" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_end_date">End Date</label>
+            <input type="date" id="goalEndDate" class="form-control" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_target_value">Target Value</label>
+            <input type="number" id="goalTargetValue" class="form-control" step="0.1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_unit">Unit</label>
+            <select id="goalUnit" class="form-control" required>
+              <option value="kg">kg</option>
+              <option value="lbs">lbs</option>
+              <option value="cm">cm</option>
+              <option value="reps">reps</option>
+              <option value="km">km</option>
+              <option value="min">minutes</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="label_description">Description</label>
+          <textarea id="goalDescription" class="form-control" rows="3" placeholder="Add goal description..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="btn_save">Save</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelGoal">
+            <span data-i18n="btn_cancel">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .overview-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .overview-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .overview-item .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .overview-item .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .goal-item {
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+  }
+
+  .goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .goal-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .goal-type {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .goal-progress {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .goal-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+
+  .goal-progress-bar {
+    height: 8px;
+    background-color: var(--bg-primary);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .goal-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-success));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .goal-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .goal-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .goal-info-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .goal-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .category-card {
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border-radius: var(--radius-md);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .category-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .category-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .category-count {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 768px) {
+    .overview-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .goal-info {
+      grid-template-columns: 1fr;
+    }
+
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const GoalsModule = {
+    init: function() {
+      this.setupEventListeners();
+      this.loadGoalsData();
+    },
+    
+    setupEventListeners: function() {
+      document.getElementById('createGoalBtn').addEventListener('click', () => {
+        this.showModal();
+      });
+      
+      document.getElementById('closeGoalModal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('cancelGoal').addEventListener('click', () => {
+        this.hideModal();
+      });
+      
+      document.getElementById('goalForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveGoal();
+      });
+    },
+    
+    loadGoalsData: function() {
+      // Mock data
+      document.getElementById('totalGoals').textContent = '5';
+      document.getElementById('activeGoals').textContent = '3';
+      document.getElementById('completedGoals').textContent = '2';
+      document.getElementById('goalCompletionRate').textContent = '40';
+      
+      this.loadActiveGoals();
+      this.loadCompletedGoals();
+      this.loadCategories();
+    },
+    
+    loadActiveGoals: function() {
+      const goals = [
+        {
+          name: 'Reach 80kg',
+          type: 'Weight',
+          target: 80,
+          current: 82.5,
+          unit: 'kg',
+          progress: 97,
+          startDate: '2024-01-01',
+          endDate: '2024-03-31'
+        },
+        {
+          name: 'Bench Press 100kg',
+          type: 'Strength',
+          target: 100,
+          current: 85,
+          unit: 'kg',
+          progress: 85,
+          startDate: '2024-01-01',
+          endDate: '2024-06-30'
+        },
+        {
+          name: 'Run 5km',
+          type: 'Endurance',
+          target: 5,
+          current: 3.5,
+          unit: 'km',
+          progress: 70,
+          startDate: '2024-01-15',
+          endDate: '2024-04-15'
+        }
+      ];
+      
+      const list = document.getElementById('activeGoalsList');
+      list.innerHTML = '';
+      
+      goals.forEach(goal => {
+        const item = document.createElement('div');
+        item.className = 'goal-item';
+        item.innerHTML = `
+          <div class="goal-header">
+            <div>
+              <div class="goal-title">${goal.name}</div>
+              <span class="goal-type">${goal.type}</span>
+            </div>
+          </div>
+          <div class="goal-progress">
+            <div class="goal-progress-label">
+              <span>Progress</span>
+              <span>${goal.progress}%</span>
+            </div>
+            <div class="goal-progress-bar">
+              <div class="goal-progress-fill" style="width: ${goal.progress}%"></div>
+            </div>
+          </div>
+          <div class="goal-info">
+            <div class="goal-info-item">
+              <span class="goal-info-label">Current</span>
+              <span>${goal.current} ${goal.unit}</span>
+            </div>
+            <div class="goal-info-item">
+              <span class="goal-info-label">Target</span>
+              <span>${goal.target} ${goal.unit}</span>
+            </div>
+            <div class="goal-info-item">
+              <span class="goal-info-label">Deadline</span>
+              <span>${Utils.formatDateReadable(goal.endDate)}</span>
+            </div>
+          </div>
+          <div class="goal-actions">
+            <button class="btn-icon" title="Edit">✏️</button>
+            <button class="btn-icon" title="Delete">🗑️</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    loadCompletedGoals: function() {
+      const goals = [
+        {
+          name: 'Complete 100 Workouts',
+          type: 'Consistency',
+          completedDate: '2024-01-10'
+        },
+        {
+          name: 'Increase Arm Size to 35cm',
+          type: 'Muscle',
+          completedDate: '2024-01-05'
+        }
+      ];
+      
+      const list = document.getElementById('completedGoalsList');
+      list.innerHTML = '';
+      
+      goals.forEach(goal => {
+        const item = document.createElement('div');
+        item.className = 'goal-item';
+        item.style.borderLeftColor = 'var(--color-success)';
+        item.innerHTML = `
+          <div class="goal-header">
+            <div>
+              <div class="goal-title">✅ ${goal.name}</div>
+              <span class="goal-type" style="background-color: rgba(40, 167, 69, 0.1); color: var(--color-success);">${goal.type}</span>
+            </div>
+          </div>
+          <div class="goal-info">
+            <div class="goal-info-item">
+              <span class="goal-info-label">Completed</span>
+              <span>${Utils.formatDateReadable(goal.completedDate)}</span>
+            </div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    },
+    
+    loadCategories: function() {
+      const categories = [
+        { icon: '⚖️', name: 'Weight Loss', count: 2 },
+        { icon: '💪', name: 'Muscle Gain', count: 1 },
+        { icon: '🏋️', name: 'Strength', count: 1 },
+        { icon: '🏃', name: 'Endurance', count: 1 }
+      ];
+      
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = '';
+      
+      categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.innerHTML = `
+          <div class="category-icon">${cat.icon}</div>
+          <div class="category-name">${cat.name}</div>
+          <div class="category-count">${cat.count} goal${cat.count !== 1 ? 's' : ''}</div>
+        `;
+        grid.appendChild(card);
+      });
+    },
+    
+    showModal: function() {
+      document.getElementById('goalStartDate').valueAsDate = new Date();
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 3);
+      document.getElementById('goalEndDate').valueAsDate = endDate;
+      document.getElementById('goalModal').style.display = 'flex';
+    },
+    
+    hideModal: function() {
+      document.getElementById('goalModal').style.display = 'none';
+      document.getElementById('goalForm').reset();
+    },
+    
+    saveGoal: function() {
+      const name = document.getElementById('goalName').value;
+      const type = document.getElementById('goalType').value;
+      
+      console.log('Saving goal:', { name, type });
+      Utils.showNotification(i18n.t('success_saved'), 'success');
+      this.hideModal();
+      this.loadGoalsData();
+    }
+  };
+</script>
