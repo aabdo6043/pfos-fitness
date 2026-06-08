@@ -10,10 +10,14 @@ const App = {
   /**
    * Initialize the application
    */
-  init: function() {
+init: function() {
+    // أضف هذا السطر أولاً
+    API.init('https://script.google.com/macros/s/AKfycbxnOD-T4yBlQgGjZin55sL5IM9VExQSqiI1QaNiaGku-bysAakkjNL_6JD34xAbzCYebw/exec');
+    
     this.setupEventListeners();
     this.loadUserData();
     this.loadDashboardData();
+
   },
   
   /**
