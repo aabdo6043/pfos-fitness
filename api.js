@@ -23,10 +23,10 @@ const API = {
       payload.append('action', action);
       payload.append('data', JSON.stringify(data));
       
-      fetch(this.baseUrl, {
-        method: 'POST',
-        payload: payload
-      })
+fetch(this.baseUrl, {
+  method: 'POST',
+  body: payload // تغيير payload إلى body
+})
       .then(response => response.json())
       .then(result => {
         if (result.success) {
